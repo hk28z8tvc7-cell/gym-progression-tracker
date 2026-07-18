@@ -1,13 +1,13 @@
-const CACHE_NAME = "gym-progression-tracker-v3";
+const CACHE_NAME = "gym-progression-tracker-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
-  "./js/app-core.js?v=3",
-  "./js/app-auth.js?v=3",
-  "./js/app-data.js?v=3",
-  "./js/app-views.js?v=3",
-  "./js/app-events.js?v=3",
+  "./js/app-data.js?v=4",
+  "./js/app-core.js?v=4",
+  "./js/app-auth.js?v=4",
+  "./js/app-views.js?v=4",
+  "./js/app-events.js?v=4",
   "./config.js",
   "./manifest.json",
   "./icons/icon-192.svg",
