@@ -90,6 +90,7 @@ async function initAuthAndSync() {
   }
   const client = getSupabaseClient();
   try {
+    await handleAuthCallbackFromUrl(client);
     const { data, error } = await client.auth.getSession();
     if (error) throw error;
     state.auth.user = data.session?.user || null;
@@ -114,6 +115,29 @@ async function initAuthAndSync() {
     render();
   }
   registerServiceWorker();
+}
+
+async function handleAuthCallbackFromUrl(client) {
+  const url = new URL(window.location.href);
+  const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
+  const errorDescription = url.searchParams.get("error_description") || hash.get("error_description");
+  if (errorDescription) {
+    setSyncStatus("offline", errorDescription);
+    cleanAuthUrl(url);
+    return;
+  }
+
+  const tokenHash = url.searchParams.get("token_hash") || hash.get("token_hash");
+  if (!tokenHash) return;
+  const type = url.searchParams.get("type") || hash.get("type") || "email";
+  const { error } = await client.auth.verifyOtp({ token_hash: tokenHash, type });
+  if (error) throw error;
+  cleanAuthUrl(url);
+}
+
+function cleanAuthUrl(url) {
+  if (!window.history?.replaceState || window.location.protocol === "file:") return;
+  window.history.replaceState({}, document.title, url.pathname);
 }
 
 async function hydrateFromCloud() {
@@ -159,9 +183,15 @@ async function signInWithEmail() {
   state.auth.email = email;
   const client = getSupabaseClient();
   if (!client) return;
+  const redirectUrl = getAuthRedirectUrl();
+  if (!redirectUrl) {
+    setSyncStatus("offline", "Open the hosted app URL to use email login. Supabase cannot send magic links back to this local file.");
+    render();
+    return;
+  }
   setSyncStatus("syncing", "Sending login link...");
   render();
-  const options = window.location.protocol === "file:" ? undefined : { emailRedirectTo: window.location.origin + window.location.pathname };
+  const options = { emailRedirectTo: redirectUrl };
   const { error } = await client.auth.signInWithOtp({ email, options });
   if (error) {
     console.error(error);
@@ -170,6 +200,12 @@ async function signInWithEmail() {
     setSyncStatus("cloud", "Check your email for the login link.");
   }
   render();
+}
+
+function getAuthRedirectUrl() {
+  const configuredUrl = supabaseConfig().appUrl;
+  if (window.location.protocol === "file:") return configuredUrl || "";
+  return window.location.origin + window.location.pathname;
 }
 
 async function signOut() {
