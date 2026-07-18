@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="Gym Progression Tracker">
+  <rect width="192" height="192" rx="32" fill="#142327"/>
+  <rect x="39" y="84" width="114" height="24" rx="12" fill="#edf3f1"/>
+  <rect x="20" y="70" width="24" height="52" rx="8" fill="#157a5b"/>
+  <rect x="148" y="70" width="24" height="52" rx="8" fill="#157a5b"/>
+  <path d="M53 137h86" stroke="#edf3f1" stroke-width="12" stroke-linecap="round"/>
+  <path d="M66 55h60" stroke="#edf3f1" stroke-width="12" stroke-linecap="round"/>
+</svg>
