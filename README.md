@@ -2,6 +2,12 @@
 
 Static gym notebook app with Supabase login/sync and GitHub Pages hosting.
 
+Live app URL:
+
+```text
+https://hk28z8tvc7-cell.github.io/gym-progression-tracker/
+```
+
 ## What GitHub Does
 
 GitHub stores the app files and GitHub Pages hosts them at a public HTTPS URL. Supabase stores the workout data, so updating the app code does not erase workouts.
